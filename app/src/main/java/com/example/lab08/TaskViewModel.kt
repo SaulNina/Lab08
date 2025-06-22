@@ -24,8 +24,8 @@ class TaskViewModel(private val dao: TaskDao) : ViewModel() {
 
 
     // Función para añadir una nueva tarea
-    fun addTask(description: String) {
-        val newTask = Task(description = description)
+    fun addTask(title:String, description: String) {
+        val newTask = Task(title = title, description = description)
         viewModelScope.launch {
             dao.insertTask(newTask)
             _tasks.value = dao.getAllTasks() // Recargamos la lista
@@ -48,6 +48,14 @@ class TaskViewModel(private val dao: TaskDao) : ViewModel() {
         viewModelScope.launch {
             dao.deleteAllTasks()
             _tasks.value = emptyList() // Vaciamos la lista en el estado
+        }
+    }
+
+    // Función para actualizar una tarea (usado al editar)
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            dao.updateTask(task)
+            _tasks.value = dao.getAllTasks()
         }
     }
 }
